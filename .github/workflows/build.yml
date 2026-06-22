@@ -30,4 +30,9 @@ jobs:
         env:
           MAVEN_OPTS: -Xmx1g
         shell: bash
-        run: mvn -B clean test
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            mvn -B clean test -DforkCount=1 -DreuseForks=false
+          else
+            mvn -B clean test
+          fi
