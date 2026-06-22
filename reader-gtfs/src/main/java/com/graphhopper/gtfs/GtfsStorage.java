@@ -185,7 +185,7 @@ public class GtfsStorage {
 		if (!file.exists()) {
 			return false;
 		}
-		this.data = DBMaker.newFileDB(file).transactionDisable().readOnly().make();
+		this.data = DBMaker.newFileDB(file).mmapFileEnable().transactionDisable().readOnly().make();
 		init();
         for (int i = 0; i < gtfsFeedIds.size(); i++) {
             String gtfsFeedId = "gtfs_" + i;
@@ -265,7 +265,7 @@ public class GtfsStorage {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		this.data = DBMaker.newFileDB(file).transactionDisable().asyncWriteEnable().make();
+		this.data = DBMaker.newFileDB(file).mmapFileEnable().transactionDisable().asyncWriteEnable().make();
 		init();
 	}
 
