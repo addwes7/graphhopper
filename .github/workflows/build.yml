@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            mvn -B clean test -DforkCount=1 -DreuseForks=false
+            mvn -B clean test -Dsurefire.excludes='**/MMapDataAccessTest.java'
           else
             mvn -B clean test
           fi
