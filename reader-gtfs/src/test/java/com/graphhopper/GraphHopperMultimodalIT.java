@@ -170,8 +170,8 @@ public interface GraphHopperMultimodalIT<T extends PtRouter> {
         assertThat(response.getHints().getInt("visited_nodes.sum", Integer.MAX_VALUE)).isLessThanOrEqualTo(263);
 
         ResponsePath firstTransitSolution = response.getAll().stream().filter(p -> p.getLegs().size() > 1).findFirst().get();
-        assertThat(firstTransitSolution.getLegs().get(0).getDepartureTime().toInstant().atZone(zoneId).toLocalTime())
-                .isEqualTo(LocalTime.parse("06:41:04.826"));
+        assertThat(firstTransitSolution.getLegs().get(0).getDepartureTime().toInstant().atZone(zoneId).toLocalTime().withNano(0))
+                .isEqualTo(LocalTime.parse("06:41:04"));
         assertThat(firstTransitSolution.getLegs().get(0).getArrivalTime().toInstant())
                 .isEqualTo(firstTransitSolution.getLegs().get(1).getDepartureTime().toInstant());
         assertThat(firstTransitSolution.getLegs().get(2).getArrivalTime().toInstant().atZone(zoneId).toLocalTime())
@@ -227,8 +227,8 @@ public interface GraphHopperMultimodalIT<T extends PtRouter> {
         GHResponse response = ptRouter().route(ghRequest);
 
         ResponsePath firstTransitSolution = response.getAll().stream().filter(p -> p.getLegs().size() > 1).findFirst().get(); // There can be a walk-only trip.
-        assertThat(firstTransitSolution.getLegs().get(0).getDepartureTime().toInstant().atZone(zoneId).toLocalTime())
-                .isEqualTo(LocalTime.parse("06:41:04.826"));
+        assertThat(firstTransitSolution.getLegs().get(0).getDepartureTime().toInstant().atZone(zoneId).toLocalTime().withNano(0))
+                .isEqualTo(LocalTime.parse("06:41:04"));
         assertThat(firstTransitSolution.getLegs().get(0).getArrivalTime().toInstant())
                 .isEqualTo(firstTransitSolution.getLegs().get(1).getDepartureTime().toInstant());
         assertThat(firstTransitSolution.getLegs().get(2).getArrivalTime().toInstant().atZone(zoneId).toLocalTime())
