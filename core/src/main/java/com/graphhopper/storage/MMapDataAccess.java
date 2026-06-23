@@ -254,12 +254,23 @@ public final class MMapDataAccess extends AbstractDataAccess {
             newSegmentCount++;
 
         if (newSegmentCount < segments.size()) {
-            clean(newSegmentCount, segments.size());
-            segments.subList(newSegmentCount, segments.size()).clear();
+            // On Windows, truncating a file fails if any part of it is still memory-mapped,
+            // even segments we intend to keep. Unmap everything first, truncate, then remap.
+            clean(0, segments.size());
+            segments.clear();
             try {
-                raFile.setLength(HEADER_OFFSET + getCapacity());
+                raFile.setLength(HEADER_OFFSET + (long) newSegmentCount * segmentSizeInBytes);
             } catch (IOException ex) {
                 throw new RuntimeException("Failed to truncate file " + getFullName(), ex);
+            }
+            try {
+                long bufferStart = HEADER_OFFSET;
+                for (int i = 0; i < newSegmentCount; i++) {
+                    segments.add(newByteBuffer(bufferStart, segmentSizeInBytes));
+                    bufferStart += segmentSizeInBytes;
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException("Failed to remap segments after trim for " + getFullName(), ex);
             }
         }
     }

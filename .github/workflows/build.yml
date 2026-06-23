@@ -27,12 +27,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Build ${{ matrix.java-version }}
-        env:
-          MAVEN_OPTS: -Xmx1g
-        shell: bash
-        run: |
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            mvn -B clean test -Dsurefire.excludes='**/MMapDataAccessTest.java'
-          else
-            mvn -B clean test
-          fi
+        run: mvn -B clean test
